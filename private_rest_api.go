@@ -23,13 +23,13 @@ const (
 	PrivateRestTradeOrderLimit        // 查询用户当前的下单量限制
 
 	// Position
-	PrivateRestTradePositionOpens         // 查询当前持仓
-	PrivateRestTradePositionLeverGet      // 查询杠杆等级列表
-	PrivateRestTradePositionLeverPost     // 设置杠杆等级
-	PrivateRestTradePositionModeGet       // 查询持仓模式
-	PrivateRestTradePositionModePost      // 设置持仓模式
-	PrivateRestTradePositionRiskLimit     // 查询持仓风险限额
-	PrivateRestTradePositionPositionLimit // 用户持仓量限制的查询
+	PrivateRestTradePositionOpens    // 查询当前持仓
+	PrivateRestPositionLeverGet      // 查询杠杆等级列表
+	PrivateRestPositionLeverPost     // 设置杠杆等级
+	PrivateRestPositionModeGet       // 查询持仓模式
+	PrivateRestPositionModePost      // 设置持仓模式
+	PrivateRestPositionRiskLimit     // 查询持仓风险限额
+	PrivateRestPositionPositionLimit // 用户持仓量限制的查询
 )
 
 var PrivateRestAPIMap = map[PrivateRestAPI]string{
@@ -53,11 +53,11 @@ var PrivateRestAPIMap = map[PrivateRestAPI]string{
 	PrivateRestTradeOrderLimit:        "/sapi/v1/trade/order_limit",         // GET 查询用户当前的下单量限制
 
 	// Positon
-	PrivateRestTradePositionOpens:         "/sapi/v1/trade/position/opens",    // GET 查询当前持仓
-	PrivateRestTradePositionLeverGet:      "/sapi/v1/position/lever",          // GET 查询杠杆等级列表
-	PrivateRestTradePositionLeverPost:     "/sapi/v1/position/lever",          // POST 设置杠杆等级
-	PrivateRestTradePositionModeGet:       "/sapi/v1/position/mode",           // GET 查询持仓模式
-	PrivateRestTradePositionModePost:      "/sapi/v1/position/mode",           // POST 设置持仓模式
-	PrivateRestTradePositionRiskLimit:     "/sapi/v1/position/risk/limit",     // GET 查询持仓风险限额
-	PrivateRestTradePositionPositionLimit: "/sapi/v1/position/position_limit", // POST 用户持仓量限制的查询
+	PrivateRestTradePositionOpens:    "/sapi/v1/trade/position/opens",    // GET 查询当前持仓
+	PrivateRestPositionLeverGet:      "/sapi/v1/position/lever",          // GET 查询杠杆等级列表
+	PrivateRestPositionLeverPost:     "/sapi/v1/position/lever",          // POST 设置杠杆等级
+	PrivateRestPositionModeGet:       "/sapi/v1/position/mode",           // GET 查询持仓模式
+	PrivateRestPositionModePost:      "/sapi/v1/position/mode",           // POST 设置持仓模式
+	PrivateRestPositionRiskLimit:     "/sapi/v1/position/risk/limit",     // GET 查询持仓风险限额
+	PrivateRestPositionPositionLimit: "/sapi/v1/position/position_limit", // POST 用户持仓量限制的查询
 }

@@ -68,8 +68,8 @@ type RestClient struct {
 	c *Client
 }
 
-func (*MySunx) NewPrivateRestClient(accessKey, secretKey string) *RestClient {
-	return &RestClient{
+func (*MySunx) NewPrivateRestClient(accessKey, secretKey string) *PrivateRestClient {
+	return &PrivateRestClient{
 		c: &Client{
 			AccessKey: accessKey,
 			SecretKey: secretKey,
@@ -77,8 +77,8 @@ func (*MySunx) NewPrivateRestClient(accessKey, secretKey string) *RestClient {
 	}
 }
 
-func (*MySunx) NewPublicRestClient() *RestClient {
-	return &RestClient{
+func (*MySunx) NewPublicRestClient() *PublicRestClient {
+	return &PublicRestClient{
 		c: &Client{},
 	}
 }

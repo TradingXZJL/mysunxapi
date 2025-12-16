@@ -25,30 +25,30 @@ type PrivateRestTradePositionOpensResRow struct {
 }
 type PrivateRestTradePositionOpensRes []PrivateRestTradePositionOpensResRow
 
-type PrivateRestTradePositionLeverResRow struct {
+type PrivateRestPositionLeverResRow struct {
 	ContractCode   string `json:"contract_code"`   // 合约代码
 	ContractType   string `json:"contract_type"`   // 合约类型 swap（永续）、this_week（当周）、next_week（次周）、quarter（当季）、next_quarter（次季）
 	MarginMode     string `json:"margin_mode"`     // 保证金模式 cross：全仓
 	LeverRate      int64  `json:"lever_rate"`      // 杠杆等级
 	AvailableLever []int  `json:"available_lever"` // 可用杠杆等级
 }
-type PrivateRestTradePositionLeverGetRes []PrivateRestTradePositionLeverResRow
+type PrivateRestPositionLeverGetRes []PrivateRestPositionLeverResRow
 
-type PrivateRestTradePositionLeverPostRes struct {
+type PrivateRestPositionLeverPostRes struct {
 	ContractCode string `json:"contract_code"` // 合约代码
 	MarginMode   string `json:"margin_mode"`   // 保证金模式
 	LeverRate    int    `json:"lever_rate"`    // 杠杆等级
 }
 
-type PrivateRestTradePositionModeGetRes struct {
+type PrivateRestPositionModeGetRes struct {
 	PositionMode string `json:"position_mode"` // 持仓模式 single_side：单向持仓；dual_side：双向持仓
 }
 
-type PrivateRestTradePositionModePostRes struct {
+type PrivateRestPositionModePostRes struct {
 	PositionMode string `json:"position_mode"` // 持仓模式 single_side：单向持仓；dual_side：双向持仓
 }
 
-type PrivateRestTradePositionRiskLimitResRow struct {
+type PrivateRestPositionRiskLimitResRow struct {
 	ContractCode          string `json:"contract_code"`           // 合约代码
 	MarginMode            string `json:"margin_mode"`             // 保证金模式
 	PositionSide          string `json:"position_side"`           // 仓位方向
@@ -57,9 +57,9 @@ type PrivateRestTradePositionRiskLimitResRow struct {
 	MaxVolume             string `json:"max_volume"`              // 该层最高持有张数
 	MinVolume             string `json:"min_volume"`              // 该层最低持有张数
 }
-type PrivateRestTradePositionRiskLimitRes []PrivateRestTradePositionRiskLimitResRow
+type PrivateRestPositionRiskLimitRes []PrivateRestPositionRiskLimitResRow
 
-type PrivateRestTradePositionPositionLimitResRow struct {
+type PrivateRestPositionPositionLimitResRow struct {
 	Symbol         string  `json:"symbol"`           // 品种代码 BTC,"ETH" ...
 	ContractCode   string  `json:"contract_code"`    // 合约代码 永续："BTC-USDT"... ，交割：”BTC-USDT-210625“
 	MarginMode     string  `json:"margin_mode"`      // 保证金模式 cross：全仓模式；
@@ -74,4 +74,4 @@ type PrivateRestTradePositionPositionLimitResRow struct {
 	MarkPrice      float64 `json:"mark_price"`       // 当前品种标记价格（以该价格用于计算持仓张数）
 	// TradePartition string  `json:"trade_partition"`  // 参数已废弃
 }
-type PrivateRestTradePositionPositionLimitRes []PrivateRestTradePositionPositionLimitResRow
+type PrivateRestPositionPositionLimitRes []PrivateRestPositionPositionLimitResRow
