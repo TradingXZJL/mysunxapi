@@ -6,6 +6,7 @@ type SunxErrorRes struct {
 	Code    int    `json:"code,omitempty"`    // 错误码
 	Status  any    `json:"status"`            // 请求处理结果 ok , "error"
 	Message string `json:"message,omitempty"` // 错误信息
+	ErrMsg  string `json:"err-msg,omitempty"` // 错误信息
 }
 
 type SunxTimeRes struct {
@@ -60,8 +61,8 @@ func handlerCommonRes[T any](body []byte) (*SunxRestRes[T], error) {
 func (err *SunxErrorRes) handlerError() error {
 	if (err.Code == 200 || err.Code == 0) &&
 		(err.Status == "" || err.Status == nil || err.Status == "ok" || err.Status == 200) &&
-		(err.Message == "Success" || err.Message == "") {
+		(err.Message == "Success" || err.Message == "") && err.ErrMsg == "" {
 		return nil
 	}
-	return fmt.Errorf("request error: [code:%v][status:%v][message:%v]", err.Code, err.Status, err.Message)
+	return fmt.Errorf("request error: [code:%v][status:%v][message:%v][errMsg:%v]", err.Code, err.Status, err.Message, err.ErrMsg)
 }

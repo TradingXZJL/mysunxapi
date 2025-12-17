@@ -127,7 +127,7 @@ type PrivateRestTradeOrderHistoryResRow struct {
 }
 type PrivateRestTradeOrderHistoryRes []PrivateRestTradeOrderHistoryResRow
 
-type PrivateRestTraderOrderGetRes PrivateRestTradeOrderHistoryRes
+type PrivateRestTradeOrderGetRes PrivateRestTradeOrderHistoryResRow
 
 type PrivateRestTradeOrderLimitRes struct {
 	OrderPriceType string `json:"order_price_type"` // 订单报价类型 limit:限价，"opponent":对手价，"lightning":闪电平仓，"optimal_5":最优5档，"optimal_10":最优10档，"optimal_20":最优20档，"fok":FOK订单，"ioc":IOC订单,opponent_ioc"： 对手价-IOC下单，"lightning_ioc"：闪电平仓-IOC下单，"optimal_5_ioc"：最优5档-IOC下单，"optimal_10_ioc"：最优10档-IOC下单，"optimal_20_ioc"：最优20档-IOC下单,"opponent_fok"： 对手价-FOK下单，"lightning_fok"：闪电平仓-FOK下单，"optimal_5_fok"：最优5档-FOK下单，"optimal_10_fok"：最优10档-FOK下单，"optimal_20_fok"：最优20档-FOK下单

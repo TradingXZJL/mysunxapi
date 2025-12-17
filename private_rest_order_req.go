@@ -17,6 +17,7 @@ type PrivateRestTradeOrderPostReq struct {
 	TpType             *string  `json:"tp_type"`               // 止盈委托类型,不填默认为market；市价：market，限价：limit ，最优5档： optimal_5，最优10档：optimal_10，最优20档：optimal_20
 	TpTriggerPriceType *string  `json:"tp_trigger_price_type"` // 止盈价格触发类型，默认是最新价 "last":最新价，"mark"：标记价格
 	SlTriggerPrice     *string  `json:"sl_trigger_price"`      // 止损触发价格
+	SlTriigerPriceType *string  `json:"sl_trigger_price_type"` // 止损价格触发类型，默认是最新价 "last":最新价，"mark"：标记价格
 	SlOrderPrice       *string  `json:"sl_order_price"`        // 止损委托价格（最优N档委托类型时无需填写价格）
 	SlType             *string  `json:"sl_type"`               // 止损委托类型,不填默认为market; 市价:market，限价：limit ，最优5档： optimal_5，最优10档：optimal_10，最优20档：optimal_20
 	SlTriggerPriceType *string  `json:"sl_trigger_price_type"` // 止损价格触发类型，默认是最新价 "last":最新价，"mark"：标记价格
@@ -121,6 +122,12 @@ func (api *PrivateRestTradeOrderPostAPI) TpTriggerPriceType(tpTriggerPriceType s
 // sl_trigger_price false 止损触发价格
 func (api *PrivateRestTradeOrderPostAPI) SlTriggerPrice(slTriggerPrice string) *PrivateRestTradeOrderPostAPI {
 	api.req.SlTriggerPrice = GetPointer(slTriggerPrice)
+	return api
+}
+
+// sl_trigger_price_type false 止损价格触发类型，默认是最新价 "last":最新价，"mark"：标记价格
+func (api *PrivateRestTradeOrderPostAPI) SlTriggerPriceType(slTriggerPriceType string) *PrivateRestTradeOrderPostAPI {
+	api.req.SlTriggerPriceType = GetPointer(slTriggerPriceType)
 	return api
 }
 
@@ -323,6 +330,10 @@ func (api *PrivateRestTradeOrderOpensAPI) MarginMode(marginMode string) *Private
 }
 
 // order_id false 订单ID
+func (api *PrivateRestTradeOrderOpensAPI) OrderId(orderId string) *PrivateRestTradeOrderOpensAPI {
+	api.req.OrderId = GetPointer(orderId)
+	return api
+}
 
 // client_order_id false 用户自定义订单ID
 func (api *PrivateRestTradeOrderOpensAPI) ClientOrderId(clientOrderId string) *PrivateRestTradeOrderOpensAPI {
@@ -488,37 +499,37 @@ func (api *PrivateRestTradeOrderHistoryAPI) Direct(direct string) *PrivateRestTr
 	return api
 }
 
-type PrivateRestTraderOrderGetReq struct {
+type PrivateRestTradeOrderGetReq struct {
 	ContractCode  *string `json:"contract_code"`   // 合约代码 true
 	MarginMode    *string `json:"margin_mode"`     // 保证金模式 true cross：全仓
 	OrderId       *string `json:"order_id"`        // 订单id，order_id和client_order_id必填写一个，若都填写了以order_id为准
 	ClientOrderId *string `json:"client_order_id"` // 用户自定义订单ID
 }
-type PrivateRestTraderOrderGetAPI struct {
+type PrivateRestTradeOrderGetAPI struct {
 	client *PrivateRestClient
-	req    *PrivateRestTraderOrderGetReq
+	req    *PrivateRestTradeOrderGetReq
 }
 
 // contract_code true 合约代码
-func (api *PrivateRestTraderOrderGetAPI) ContractCode(contractCode string) *PrivateRestTraderOrderGetAPI {
+func (api *PrivateRestTradeOrderGetAPI) ContractCode(contractCode string) *PrivateRestTradeOrderGetAPI {
 	api.req.ContractCode = GetPointer(contractCode)
 	return api
 }
 
 // margin_mode true 保证金模式
-func (api *PrivateRestTraderOrderGetAPI) MarginMode(marginMode string) *PrivateRestTraderOrderGetAPI {
+func (api *PrivateRestTradeOrderGetAPI) MarginMode(marginMode string) *PrivateRestTradeOrderGetAPI {
 	api.req.MarginMode = GetPointer(marginMode)
 	return api
 }
 
 // order_id false 订单id，order_id和client_order_id必填写一个，若都填写了以order_id为准
-func (api *PrivateRestTraderOrderGetAPI) OrderId(orderId string) *PrivateRestTraderOrderGetAPI {
+func (api *PrivateRestTradeOrderGetAPI) OrderId(orderId string) *PrivateRestTradeOrderGetAPI {
 	api.req.OrderId = GetPointer(orderId)
 	return api
 }
 
 // client_order_id false 用户自定义订单ID
-func (api *PrivateRestTraderOrderGetAPI) ClientOrderId(clientOrderId string) *PrivateRestTraderOrderGetAPI {
+func (api *PrivateRestTradeOrderGetAPI) ClientOrderId(clientOrderId string) *PrivateRestTradeOrderGetAPI {
 	api.req.ClientOrderId = GetPointer(clientOrderId)
 	return api
 }

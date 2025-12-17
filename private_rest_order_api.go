@@ -18,7 +18,7 @@ func (api *PrivateRestTradeOrderPostAPI) Do() (*SunxRestRes[PrivateRestTradeOrde
 }
 
 // POST 批量下单
-func (client *PrivateRestClient) NewPrivateRestBatchOrders() *PrivateRestTradeBatchOrdersAPI {
+func (client *PrivateRestClient) NewPrivateRestTradeBatchOrders() *PrivateRestTradeBatchOrdersAPI {
 	return &PrivateRestTradeBatchOrdersAPI{
 		client: client,
 		req:    &PrivateRestTradeBatchOrdersReq{},
@@ -159,16 +159,16 @@ func (api *PrivateRestTradeOrderHistoryAPI) Do() (*SunxRestRes[PrivateRestTradeO
 }
 
 // GET 查询订单信息
-func (client *PrivateRestClient) NewPrivateRestTraderOrderGet() *PrivateRestTraderOrderGetAPI {
-	return &PrivateRestTraderOrderGetAPI{
+func (client *PrivateRestClient) NewPrivateRestTradeOrderGet() *PrivateRestTradeOrderGetAPI {
+	return &PrivateRestTradeOrderGetAPI{
 		client: client,
-		req:    &PrivateRestTraderOrderGetReq{},
+		req:    &PrivateRestTradeOrderGetReq{},
 	}
 }
 
-func (api *PrivateRestTraderOrderGetAPI) Do() (*SunxRestRes[PrivateRestTraderOrderGetRes], error) {
+func (api *PrivateRestTradeOrderGetAPI) Do() (*SunxRestRes[PrivateRestTradeOrderGetRes], error) {
 	url := sunxHandlerRequestAPIWithSignature(api.client.c, REST, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderGet])
-	return sunxCallApi[PrivateRestTraderOrderGetRes](url, NIL_REQBODY, GET)
+	return sunxCallApi[PrivateRestTradeOrderGetRes](url, NIL_REQBODY, GET)
 }
 
 // GET 查询用户当前的下单量限制
@@ -183,5 +183,3 @@ func (api *PrivateRestTradeOrderLimitAPI) Do() (*SunxRestRes[PrivateRestTradeOrd
 	url := sunxHandlerRequestAPIWithSignature(api.client.c, REST, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderLimit])
 	return sunxCallApi[PrivateRestTradeOrderLimitRes](url, NIL_REQBODY, GET)
 }
-
-
