@@ -16,6 +16,7 @@ import (
 
 	"github.com/bwmarrin/snowflake"
 	"github.com/gorilla/websocket"
+	"golang.org/x/sync/errgroup"
 )
 
 const SUNX_API_WS = "api.sunx.io"
@@ -106,10 +107,12 @@ func (ws *WsStreamClient) sendSubscribeResultToChan(result WsSubscribeResCommon)
 	}
 	if result.Id != "" {
 		if sub, ok := ws.waitSubscribeResMap.Load(result.Id); ok {
-			if result.ErrCode != 0 || result.ErrMsg != "" {
-				sub.errChan <- fmt.Errorf("errHandler: %+v", result)
-			} else {
+
+			log.Warnf("%d,%s,%s", result.ErrCode, result.ErrMsg, result.Status)
+			if result.ErrCode == 0 || result.ErrMsg == "" || result.Status == "ok" {
 				sub.resultChan <- result
+			} else {
+				sub.errChan <- fmt.Errorf("errHandler: %+v", result)
 			}
 			ws.waitSubscribeResMap.Delete(result.Id)
 			return
@@ -132,6 +135,88 @@ func (ws *WsStreamClient) sendSubscribeResultToChan(result WsSubscribeResCommon)
 			ws.waitSubResult.resultChan <- result
 		}
 	}
+}
+
+// 解除所有订阅，清除所有订阅者
+func (ws *WsStreamClient) sendWsCloseToAllSub() {
+	ws.currentSubMap.Range(func(reqId string, sub *Subscription[WsSubscribeReqCommon, WsSubscribeResCommon]) bool {
+		ws.sendUnSubscribeSuccessToCloseChan(reqId, sub.SubId)
+		return true
+	})
+}
+
+func (ws *WsStreamClient) sendUnSubscribeSuccessToCloseChan(reqId string, subId string) {
+	//解除订阅，删除不需要的订阅者
+	//清除当前该订阅
+	if _, ok := ws.currentSubMap.Load(subId); ok {
+		ws.currentSubMap.Delete(subId)
+	}
+
+	//删除K线订阅者
+	if sub, ok := ws.klineSubMap.Load(subId); ok {
+		ws.klineSubMap.Delete(subId)
+		if sub.closeChan != nil {
+			sub.closeChan <- struct{}{}
+			sub.closeChan = nil
+		}
+	}
+
+	//删除深度订阅者
+	if sub, ok := ws.depthSubMap.Load(subId); ok {
+		ws.depthSubMap.Delete(subId)
+		if sub.closeChan != nil {
+			sub.closeChan <- struct{}{}
+			sub.closeChan = nil
+		}
+	}
+
+	//删除深度增量订阅者
+	if sub, ok := ws.depthHighFreqSubMap.Load(subId); ok {
+		ws.depthHighFreqSubMap.Delete(subId)
+		if sub.closeChan != nil {
+			sub.closeChan <- struct{}{}
+			sub.closeChan = nil
+		}
+	}
+
+	//删除逐笔行情订阅者
+	if sub, ok := ws.bboSubMap.Load(subId); ok {
+		ws.bboSubMap.Delete(subId)
+		if sub.closeChan != nil {
+			sub.closeChan <- struct{}{}
+			sub.closeChan = nil
+		}
+	}
+}
+
+func (ws *WsStreamClient) reSubscribeForReconnect() error {
+	var errG errgroup.Group
+	ws.currentSubMap.Range(func(_ string, sub *Subscription[WsSubscribeReqCommon, WsSubscribeResCommon]) bool {
+		// 如果没有保存请求参数，跳过
+		if len(sub.SubReqs) == 0 {
+			return true
+		}
+
+		errG.Go(func() error {
+			reqId := sub.SubReqs[0].Id
+			if reqId == "" {
+				reqId = sub.SubReqs[0].Cid
+			}
+			if reqId == "" {
+				reqId = node.Generate().String()
+			}
+			newSub, err := subscribe[WsSubscribeReqCommon, WsSubscribeResCommon](ws, sub.SubReqs, reqId)
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+
+			sub.SubId = newSub.SubId
+			return nil
+		})
+		return true
+	})
+	return errG.Wait()
 }
 
 type PublicWsStreamClient struct {
@@ -205,15 +290,16 @@ func (*MySunx) NewPrivateWsStreamClient(accessKey, secretKey string, wsType WsAP
 }
 
 type Subscription[T any, R any] struct {
-	SubId      string          //订阅ID
-	Ws         *WsStreamClient //订阅的连接
-	Op         string          //订阅方法
-	Topic      string          //订阅主题
-	Req        *T              //订阅参数
-	Res        *R              //订阅返回结果
-	resultChan chan R          //接收订阅结果的通道
-	errChan    chan error      //接收订阅错误的通道
-	closeChan  chan struct{}   //接收订阅关闭的通道
+	SubId      string                  //订阅ID
+	Ws         *WsStreamClient         //订阅的连接
+	Op         string                  //订阅方法
+	Topic      string                  //订阅主题
+	Req        *T                      //订阅参数
+	SubReqs    []*WsSubscribeReqCommon //订阅参数列表(用于重连)
+	Res        *R                      //订阅返回结果
+	resultChan chan R                  //接收订阅结果的通道
+	errChan    chan error              //接收订阅错误的通道
+	closeChan  chan struct{}           //接收订阅关闭的通道
 	// subResultMap map[string]bool //订阅结果
 }
 
@@ -284,6 +370,7 @@ func subscribe[T any, R any](ws *WsStreamClient, subscribeReq []*T, reqId string
 		resultChan: make(chan WsSubscribeResCommon, 50), // 给个缓冲区
 		errChan:    make(chan error, 1),
 		closeChan:  make(chan struct{}, 1),
+		SubReqs:    make([]*WsSubscribeReqCommon, 0, len(subscribeReq)),
 	}
 
 	for _, req := range subscribeReq {
@@ -291,6 +378,12 @@ func subscribe[T any, R any](ws *WsStreamClient, subscribeReq []*T, reqId string
 		if err != nil {
 			return nil, err
 		}
+		// 将请求参数转换为通用结构保存，用于重连
+		commonReq := &WsSubscribeReqCommon{}
+		if err := json.Unmarshal(data, commonReq); err == nil {
+			waitSubResult.SubReqs = append(waitSubResult.SubReqs, commonReq)
+		}
+
 		log.Debugf("ws subscribe req: %s", string(data))
 		ws.writeMu.Lock()
 		err = ws.conn.WriteMessage(websocket.TextMessage, data)
@@ -317,6 +410,33 @@ func subscribe[T any, R any](ws *WsStreamClient, subscribeReq []*T, reqId string
 	}
 
 	return dataSubResult, nil
+}
+
+func (ws *WsStreamClient) Close() error {
+	ws.isClose = true
+
+	err := ws.conn.Close()
+	if err != nil {
+		return err
+	}
+
+	//手动关闭成功，给所有订阅发送关闭信号
+	ws.sendWsCloseToAllSub()
+
+	//初始化连接状态
+	ws.conn = nil
+	ws.connId = ""
+	close(ws.resultChan)
+	close(ws.errChan)
+	ws.waitSubscribeResMap = NewMySyncMap[string, *Subscription[WsSubscribeReqCommon, WsSubscribeResCommon]]()
+
+	ws.currentSubMap = NewMySyncMap[string, *Subscription[WsSubscribeReqCommon, WsSubscribeResCommon]]()
+	ws.bboSubMap = NewMySyncMap[string, *Subscription[WsMarketCommonReq, WsBBO]]()
+	ws.depthSubMap = NewMySyncMap[string, *Subscription[WsMarketCommonReq, WsDepth]]()
+	ws.depthHighFreqSubMap = NewMySyncMap[string, *Subscription[WsMarketDepthHighFreqReq, WsDepthHighFreq]]()
+	ws.klineSubMap = NewMySyncMap[string, *Subscription[WsMarketCommonReq, WsKline]]()
+
+	return nil
 }
 
 func (ws *WsStreamClient) catchSubscribeResult(sub *Subscription[WsSubscribeReqCommon, WsSubscribeResCommon]) error {
@@ -381,10 +501,10 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					ws.AutoReConnectTimes += 1
 					go func() {
 						//重新订阅
-						// err = ws.reSubscribeForReconnect()
-						// if err != nil {
-						// 	log.Error(err)
-						// }
+						err = ws.reSubscribeForReconnect()
+						if err != nil {
+							log.Error(err)
+						}
 					}()
 				} else {
 					continue
