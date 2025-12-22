@@ -17,10 +17,9 @@ type PrivateRestTradeOrderPostReq struct {
 	TpType             *string  `json:"tp_type"`               // 止盈委托类型,不填默认为market；市价：market，限价：limit ，最优5档： optimal_5，最优10档：optimal_10，最优20档：optimal_20
 	TpTriggerPriceType *string  `json:"tp_trigger_price_type"` // 止盈价格触发类型，默认是最新价 "last":最新价，"mark"：标记价格
 	SlTriggerPrice     *string  `json:"sl_trigger_price"`      // 止损触发价格
-	SlTriigerPriceType *string  `json:"sl_trigger_price_type"` // 止损价格触发类型，默认是最新价 "last":最新价，"mark"：标记价格
+	SlTriggerPriceType *string  `json:"sl_trigger_price_type"` // 止损价格触发类型，默认是最新价 "last":最新价，"mark"：标记价格
 	SlOrderPrice       *string  `json:"sl_order_price"`        // 止损委托价格（最优N档委托类型时无需填写价格）
 	SlType             *string  `json:"sl_type"`               // 止损委托类型,不填默认为market; 市价:market，限价：limit ，最优5档： optimal_5，最优10档：optimal_10，最优20档：optimal_20
-	SlTriggerPriceType *string  `json:"sl_trigger_price_type"` // 止损价格触发类型，默认是最新价 "last":最新价，"mark"：标记价格
 	PriceProtect       *string  `json:"price_protect"`         // 价差保护，默认为false。仅当设置止盈/止损需要该参数。 false 或者 true
 	SelfMatchPrevent   *string  `json:"self_match_prevent"`    // 防自成交 cancel_maker：撤销maker单 cancel_both：撤销全部订单 默认值：cancel_taker
 }

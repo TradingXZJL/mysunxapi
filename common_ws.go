@@ -107,8 +107,6 @@ func (ws *WsStreamClient) sendSubscribeResultToChan(result WsSubscribeResCommon)
 	}
 	if result.Id != "" {
 		if sub, ok := ws.waitSubscribeResMap.Load(result.Id); ok {
-
-			log.Warnf("%d,%s,%s", result.ErrCode, result.ErrMsg, result.Status)
 			if result.ErrCode == 0 || result.ErrMsg == "" || result.Status == "ok" {
 				sub.resultChan <- result
 			} else {
@@ -140,51 +138,139 @@ func (ws *WsStreamClient) sendSubscribeResultToChan(result WsSubscribeResCommon)
 // 解除所有订阅，清除所有订阅者
 func (ws *WsStreamClient) sendWsCloseToAllSub() {
 	ws.currentSubMap.Range(func(reqId string, sub *Subscription[WsSubscribeReqCommon, WsSubscribeResCommon]) bool {
-		ws.sendUnSubscribeSuccessToCloseChan(reqId, sub.SubId)
+		subKeys := make([]string, 0, len(sub.SubReqs))
+		for _, req := range sub.SubReqs {
+			key := req.Sub
+			if key == "" {
+				key = req.Topic
+			}
+			if key != "" {
+				subKeys = append(subKeys, key)
+			}
+		}
+		ws.sendUnSubscribeSuccessToCloseChan(reqId, subKeys)
 		return true
 	})
 }
 
-func (ws *WsStreamClient) sendUnSubscribeSuccessToCloseChan(reqId string, subId string) {
-	//解除订阅，删除不需要的订阅者
-	//清除当前该订阅
-	if _, ok := ws.currentSubMap.Load(subId); ok {
-		ws.currentSubMap.Delete(subId)
+func (ws *WsStreamClient) sendUnSubscribeSuccessToCloseChan(reqId string, subKeys []string) {
+	if _, ok := ws.currentSubMap.Load(reqId); ok {
+		ws.currentSubMap.Delete(reqId)
 	}
 
-	//删除K线订阅者
-	if sub, ok := ws.klineSubMap.Load(subId); ok {
-		ws.klineSubMap.Delete(subId)
-		if sub.closeChan != nil {
-			sub.closeChan <- struct{}{}
-			sub.closeChan = nil
+	for _, key := range subKeys {
+		if key == "" {
+			continue
 		}
-	}
 
-	//删除深度订阅者
-	if sub, ok := ws.depthSubMap.Load(subId); ok {
-		ws.depthSubMap.Delete(subId)
-		if sub.closeChan != nil {
-			sub.closeChan <- struct{}{}
-			sub.closeChan = nil
+		// 删除 bbo 订阅者
+		if sub, ok := ws.bboSubMap.Load(key); ok {
+			ws.bboSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
 		}
-	}
 
-	//删除深度增量订阅者
-	if sub, ok := ws.depthHighFreqSubMap.Load(subId); ok {
-		ws.depthHighFreqSubMap.Delete(subId)
-		if sub.closeChan != nil {
-			sub.closeChan <- struct{}{}
-			sub.closeChan = nil
+		// 删除深度订阅者
+		if sub, ok := ws.depthSubMap.Load(key); ok {
+			ws.depthSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
 		}
-	}
 
-	//删除逐笔行情订阅者
-	if sub, ok := ws.bboSubMap.Load(subId); ok {
-		ws.bboSubMap.Delete(subId)
-		if sub.closeChan != nil {
-			sub.closeChan <- struct{}{}
-			sub.closeChan = nil
+		// 删除深度增量订阅者
+		if sub, ok := ws.depthHighFreqSubMap.Load(key); ok {
+			ws.depthHighFreqSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
+		}
+
+		// 删除K线订阅者
+		if sub, ok := ws.klineSubMap.Load(key); ok {
+			ws.klineSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
+		}
+
+		// 删除 Trade Detail 订阅者
+		if sub, ok := ws.tradeDetailSubMap.Load(key); ok {
+			ws.tradeDetailSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
+		}
+
+		// 删除账户资金订阅者
+		if sub, ok := ws.accountSubMap.Load(key); ok {
+			ws.accountSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
+		}
+
+		// 删除持仓变动订阅者
+		if sub, ok := ws.positionsSubMap.Load(key); ok {
+			ws.positionsSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
+		}
+
+		// 删除撮合订单订阅者
+		if sub, ok := ws.matchOrdersSubMap.Load(key); ok {
+			ws.matchOrdersSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
+		}
+
+		// 删除成交变动订阅者
+		if sub, ok := ws.tradeSubMap.Load(key); ok {
+			ws.tradeSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
+		}
+
+		// 删除订单订阅者
+		if sub, ok := ws.ordersSubMap.Load(key); ok {
+			ws.ordersSubMap.Delete(key)
+			if sub.closeChan != nil {
+				select {
+				case sub.closeChan <- struct{}{}:
+				default:
+				}
+			}
 		}
 	}
 }
@@ -318,6 +404,65 @@ func (s *Subscription[T, R]) CloseChan() chan struct{} {
 	return s.closeChan
 }
 
+// 取消订阅
+func (s *Subscription[T, R]) Unsubscribe() error {
+	if s.Ws == nil || s.Ws.conn == nil || s.Ws.isClose {
+		return fmt.Errorf("websocket is closed")
+	}
+
+	if len(s.SubReqs) == 0 {
+		return fmt.Errorf("no subscription requests to unsubscribe")
+	}
+
+	unsubReqs := make([]*WsSubscribeReqCommon, 0, len(s.SubReqs))
+	subKeys := make([]string, 0, len(s.SubReqs))
+
+	for _, req := range s.SubReqs {
+		unsubReq := &WsSubscribeReqCommon{
+			Id:       req.Id,
+			Cid:      req.Cid,
+			DataType: req.DataType,
+		}
+
+		if req.Sub != "" {
+			unsubReq.Unsub = req.Sub
+			subKeys = append(subKeys, req.Sub)
+		}
+		if req.Op != "" {
+			unsubReq.Op = "unsub"
+			unsubReq.Topic = req.Topic
+			unsubReq.ContractCode = req.ContractCode
+			if req.Topic != "" {
+				subKeys = append(subKeys, req.Topic)
+			}
+		}
+
+		unsubReqs = append(unsubReqs, unsubReq)
+	}
+
+	// 发送取消订阅请求
+	for _, req := range unsubReqs {
+		data, err := json.Marshal(req)
+		if err != nil {
+			return fmt.Errorf("marshal unsubscribe request failed: %w", err)
+		}
+		log.Debugf("ws unsubscribe req: %s", string(data))
+		s.Ws.writeMu.Lock()
+		err = s.Ws.conn.WriteMessage(websocket.TextMessage, data)
+		s.Ws.writeMu.Unlock()
+		if err != nil {
+			return fmt.Errorf("send unsubscribe request failed: %w", err)
+		}
+	}
+
+	log.Debugf("Unsubscribe Success args:%v", s.SubReqs)
+
+	// 取消订阅成功，统一清理资源
+	s.Ws.sendUnSubscribeSuccessToCloseChan(s.SubId, subKeys)
+
+	return nil
+}
+
 // 通用订阅请求结构
 type WsSubscribeReqCommon struct {
 	// public
@@ -407,6 +552,7 @@ func subscribe[T any, R any](ws *WsStreamClient, subscribeReq []*T, reqId string
 		resultChan: make(chan R, 50),
 		errChan:    make(chan error, 1),
 		closeChan:  make(chan struct{}, 1),
+		SubReqs:    waitSubResult.SubReqs,
 	}
 
 	return dataSubResult, nil

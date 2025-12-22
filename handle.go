@@ -48,7 +48,7 @@ func (r *SunxRestRes[T]) UnmarshalJSON(data []byte) error {
 }
 
 func handlerCommonRes[T any](body []byte) (*SunxRestRes[T], error) {
-	log.Info("Rest返回值: ", string(body))
+	// log.Info("Rest返回值: ", string(body))
 	res := &SunxRestRes[T]{}
 	err := json.Unmarshal(body, res)
 	if err != nil {
