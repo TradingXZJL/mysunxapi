@@ -4,6 +4,13 @@ import (
 	"fmt"
 )
 
+type WsOrderBookSize int
+
+const (
+	WS_ORDER_BOOK_SIZE_20  WsOrderBookSize = 20  // 20: stands for 20 unmerged data.
+	Ws_ORDER_BOOK_SIZE_150 WsOrderBookSize = 150 // 150:stands for 150 unmerged data.
+)
+
 type WsMarketCommonReq struct {
 	Sub   string `json:"sub,omitempty"`
 	Unsub string `json:"unsub,omitempty"`
