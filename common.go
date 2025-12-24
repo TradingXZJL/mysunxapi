@@ -207,7 +207,7 @@ func sunxHandlerReq[T any](req *T) map[string]string {
 		argName := t.Field(i).Tag.Get("json")
 		switch v.Field(i).Elem().Kind() {
 		case reflect.String:
-			reqMap[argName] = url.QueryEscape(v.Field(i).Elem().String())
+			reqMap[argName] = v.Field(i).Elem().String()
 		case reflect.Int, reflect.Int64:
 			reqMap[argName] = strconv.FormatInt(v.Field(i).Elem().Int(), BIT_BASE_10)
 		case reflect.Float32, reflect.Float64:
