@@ -135,7 +135,7 @@ func sunxHandlerRequestAPIWithoutSignature[T any](apiType APIType, request *T, n
 	reqMap := sunxHandlerReq(request)
 	queryStr := ""
 	for k, v := range reqMap {
-		queryStr += k + "=" + url.QueryEscape(v) + "&"
+		queryStr += k + "=" + v + "&"
 	}
 	queryStr = strings.TrimRight(queryStr, "&")
 	return url.URL{
@@ -166,9 +166,9 @@ func sunxHandlerRequestAPIWithSignature[T any](client *Client, apiType APIType, 
 		query := ""
 		for i, k := range keys {
 			if i < len(keys)-1 {
-				query += k + "=" + url.QueryEscape(m[k]) + "&"
+				query += k + "=" + m[k] + "&"
 			} else {
-				query += k + "=" + url.QueryEscape(m[k])
+				query += k + "=" + m[k]
 			}
 		}
 		return query
@@ -207,13 +207,13 @@ func sunxHandlerReq[T any](req *T) map[string]string {
 		argName := t.Field(i).Tag.Get("json")
 		switch v.Field(i).Elem().Kind() {
 		case reflect.String:
-			reqMap[argName] = v.Field(i).Elem().String()
+			reqMap[argName] = url.QueryEscape(v.Field(i).Elem().String())
 		case reflect.Int, reflect.Int64:
-			reqMap[argName] = strconv.FormatInt(v.Field(i).Elem().Int(), BIT_BASE_10)
+			reqMap[argName] = url.QueryEscape(strconv.FormatInt(v.Field(i).Elem().Int(), BIT_BASE_10))
 		case reflect.Float32, reflect.Float64:
-			reqMap[argName] = decimal.NewFromFloat(v.Field(i).Elem().Float()).String()
+			reqMap[argName] = url.QueryEscape(decimal.NewFromFloat(v.Field(i).Elem().Float()).String())
 		case reflect.Bool:
-			reqMap[argName] = strconv.FormatBool(v.Field(i).Elem().Bool())
+			reqMap[argName] = url.QueryEscape(strconv.FormatBool(v.Field(i).Elem().Bool()))
 		case reflect.Struct:
 			sv := reflect.ValueOf(v.Field(i).Interface())
 			ToStringMethod := sv.MethodByName("String")
