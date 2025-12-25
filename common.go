@@ -153,7 +153,7 @@ func sunxHandlerRequestAPIWithSignature[T any](client *Client, apiType APIType, 
 	reqMap["SignatureMethod"] = "HmacSHA256"
 	reqMap["SignatureVersion"] = "2"
 	timestamp := time.Now().UTC().Format("2006-01-02T15:04:05")
-	reqMap["Timestamp"] = timestamp
+	reqMap["Timestamp"] = url.QueryEscape(timestamp)
 
 	sortQueryFunc := func(m map[string]string) string {
 		keys := []string{}
@@ -209,11 +209,11 @@ func sunxHandlerReq[T any](req *T) map[string]string {
 		case reflect.String:
 			reqMap[argName] = url.QueryEscape(v.Field(i).Elem().String())
 		case reflect.Int, reflect.Int64:
-			reqMap[argName] = url.QueryEscape(strconv.FormatInt(v.Field(i).Elem().Int(), BIT_BASE_10))
+			reqMap[argName] = strconv.FormatInt(v.Field(i).Elem().Int(), BIT_BASE_10)
 		case reflect.Float32, reflect.Float64:
-			reqMap[argName] = url.QueryEscape(decimal.NewFromFloat(v.Field(i).Elem().Float()).String())
+			reqMap[argName] = decimal.NewFromFloat(v.Field(i).Elem().Float()).String()
 		case reflect.Bool:
-			reqMap[argName] = url.QueryEscape(strconv.FormatBool(v.Field(i).Elem().Bool()))
+			reqMap[argName] = strconv.FormatBool(v.Field(i).Elem().Bool())
 		case reflect.Struct:
 			sv := reflect.ValueOf(v.Field(i).Interface())
 			ToStringMethod := sv.MethodByName("String")
