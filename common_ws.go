@@ -661,6 +661,8 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					return
 				}
 
+
+				// log.Warn("data: ", string(data))
 				// Auth Success
 				if strings.Contains(string(data), "op\":\"auth") {
 					log.Debug("auth success: ", string(data))

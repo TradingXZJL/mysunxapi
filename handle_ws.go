@@ -420,11 +420,13 @@ type WsOrders struct {
 		TradeId          string `json:"trade_id"`
 		TradeVolume      string `json:"trade_volume"`
 		TotalTradeVolume string `json:"total_trade_volume"`
-		TradePrice       string `json:"trade_price"`
+		TradeAvgPrice    string `json:"trade_avg_price"`
 		TradeTurnover    string `json:"trade_turnover"`
 		Role             string `json:"role"`
 		CreatedTime      string `json:"created_time"`
 		MatchTime        string `json:"match_time"`
+		Fee              string `json:"fee"`
+		FeeCurrency      string `json:"fee_currency"`
 		SelfMatchPrevent string `json:"self_match_prevent"`
 	} `json:"data"`
 }
