@@ -99,11 +99,11 @@ func (c *RestClient) PrivateRestClient() *PrivateRestClient {
 	}
 }
 
-func sunxCallApi[T any](url url.URL, reqBody []byte, method string) (*SunxRestRes[T], error) {
+func sunxCallApi[T any](url url.URL, reqBody []byte, method string, apiType APIType) (*SunxRestRes[T], error) {
 
 	headerMap := map[string]string{"Content-Type": "application/json"}
 
-	body, err := RequestWithHeader(url.String(), reqBody, method, headerMap, IS_GZIP)
+	body, err := RequestWithHeader(url.String(), reqBody, method, headerMap, IS_GZIP, apiType)
 	if err != nil {
 		return nil, err
 	}
@@ -118,13 +118,15 @@ func sunxCallApi[T any](url url.URL, reqBody []byte, method string) (*SunxRestRe
 type APIType int
 
 const (
-	REST APIType = iota
+	PUBLIC APIType = iota
+	PRIVATE_TRADE
+	PRIVATE_READ
 	WS
 )
 
 func sunxGetHost(apiType APIType) string {
 	switch apiType {
-	case REST:
+	case PUBLIC, PRIVATE_TRADE, PRIVATE_READ:
 		return SUNX_API_HTTP
 	}
 	return ""

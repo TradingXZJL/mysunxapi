@@ -1,6 +1,6 @@
 package mysunxapi
 
-// GET 获取合约信息
+// GET PUBLIC_READ 获取合约信息
 func (client *PublicRestClient) NewPublicRestPublicContractInfo() *PublicRestPublicContractInfoAPI {
 	return &PublicRestPublicContractInfoAPI{
 		client: client,
@@ -9,11 +9,11 @@ func (client *PublicRestClient) NewPublicRestPublicContractInfo() *PublicRestPub
 }
 
 func (api *PublicRestPublicContractInfoAPI) Do() (*SunxRestRes[PublicRestPublicContractInfoRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestPublicContractInfo])
-	return sunxCallApi[PublicRestPublicContractInfoRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestPublicContractInfo])
+	return sunxCallApi[PublicRestPublicContractInfoRes](url, NIL_REQBODY, GET, PUBLIC)
 }
 
-// GET 获取合约指数信息
+// GET PUBLIC_READ 获取合约指数信息
 func (client *PublicRestClient) NewPublicRestPublicIndex() *PublicRestPublicIndexAPI {
 	return &PublicRestPublicIndexAPI{
 		client: client,
@@ -22,11 +22,11 @@ func (client *PublicRestClient) NewPublicRestPublicIndex() *PublicRestPublicInde
 }
 
 func (api *PublicRestPublicIndexAPI) Do() (*SunxRestRes[PublicRestPublicIndexRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestPublicIndex])
-	return sunxCallApi[PublicRestPublicIndexRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestPublicIndex])
+	return sunxCallApi[PublicRestPublicIndexRes](url, NIL_REQBODY, GET, PUBLIC)
 }
 
-// GET 获取合约最高限价和最低限价
+// GET PRIVATE_READ 获取合约最高限价和最低限价
 func (client *PublicRestClient) NewPublicRestPublicRiskLimit() *PublicRestPublicRiskLimitAPI {
 	return &PublicRestPublicRiskLimitAPI{
 		client: client,
@@ -35,11 +35,11 @@ func (client *PublicRestClient) NewPublicRestPublicRiskLimit() *PublicRestPublic
 }
 
 func (api *PublicRestPublicRiskLimitAPI) Do() (*SunxRestRes[PublicRestPublicRiskLimitRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestPublicRiskLimit])
-	return sunxCallApi[PublicRestPublicRiskLimitRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PRIVATE_READ, api.req, PublicRestAPIMap[PublicRestPublicRiskLimit])
+	return sunxCallApi[PublicRestPublicRiskLimitRes](url, NIL_REQBODY, GET, PRIVATE_READ)
 }
 
-// GET 获取合约的资金费率
+// GET PUBLIC_READ 获取合约的资金费率
 func (client *PublicRestClient) NewPublicRestPublicFundingRate() *PublicRestPublicFundingRateAPI {
 	return &PublicRestPublicFundingRateAPI{
 		client: client,
@@ -48,11 +48,11 @@ func (client *PublicRestClient) NewPublicRestPublicFundingRate() *PublicRestPubl
 }
 
 func (api *PublicRestPublicFundingRateAPI) Do() (*SunxRestRes[PublicRestPublicFundingRateRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestPublicFundingRate])
-	return sunxCallApi[PublicRestPublicFundingRateRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestPublicFundingRate])
+	return sunxCallApi[PublicRestPublicFundingRateRes](url, NIL_REQBODY, GET, PUBLIC)
 }
 
-// GET 获取合约的历史资金费率
+// GET PUBLIC_READ 获取合约的历史资金费率
 func (client *PublicRestClient) NewPublicRestPublicFundingRateHistory() *PublicRestPublicFundingRateHistoryAPI {
 	return &PublicRestPublicFundingRateHistoryAPI{
 		client: client,
@@ -60,7 +60,7 @@ func (client *PublicRestClient) NewPublicRestPublicFundingRateHistory() *PublicR
 	}
 }
 
-// GET 获取合约最高限价和最低限价
+// GET PUBLIC_READ 获取合约最高限价和最低限价
 func (client *PublicRestClient) NewPublicRestPublicPriceLimit() *PublicRestPublicPriceLimitAPI {
 	return &PublicRestPublicPriceLimitAPI{
 		client: client,
@@ -69,16 +69,16 @@ func (client *PublicRestClient) NewPublicRestPublicPriceLimit() *PublicRestPubli
 }
 
 func (api *PublicRestPublicPriceLimitAPI) Do() (*SunxRestRes[PublicRestPublicPriceLimitRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestPublicPriceLimit])
-	return sunxCallApi[PublicRestPublicPriceLimitRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestPublicPriceLimit])
+	return sunxCallApi[PublicRestPublicPriceLimitRes](url, NIL_REQBODY, GET, PUBLIC)
 }
 
 func (api *PublicRestPublicFundingRateHistoryAPI) Do() (*SunxRestRes[PublicRestPublicFundingRateHistoryRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestPublicFundingRateHistory])
-	return sunxCallApi[PublicRestPublicFundingRateHistoryRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestPublicFundingRateHistory])
+	return sunxCallApi[PublicRestPublicFundingRateHistoryRes](url, NIL_REQBODY, GET, PUBLIC)
 }
 
-// GET 查询联合保证金支持币种
+// GET PRIVATE_READ 查询联合保证金支持币种
 func (client *PublicRestClient) NewPublicRestPublicMultiAssetsMargin() *PublicRestPublicMultiAssetsMarginAPI {
 	return &PublicRestPublicMultiAssetsMarginAPI{
 		client: client,
@@ -87,6 +87,6 @@ func (client *PublicRestClient) NewPublicRestPublicMultiAssetsMargin() *PublicRe
 }
 
 func (api *PublicRestPublicMultiAssetsMarginAPI) Do() (*SunxRestRes[PublicRestPublicMultiAssetsMarginRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestPublicMultiAssetsMargin])
-	return sunxCallApi[PublicRestPublicMultiAssetsMarginRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PRIVATE_READ, api.req, PublicRestAPIMap[PublicRestPublicMultiAssetsMargin])
+	return sunxCallApi[PublicRestPublicMultiAssetsMarginRes](url, NIL_REQBODY, GET, PRIVATE_READ)
 }

@@ -53,7 +53,7 @@ func handlerCommonRes[T any](body []byte) (*SunxRestRes[T], error) {
 	err := json.Unmarshal(body, res)
 	if err != nil {
 		log.Error("Rest返回值: ", string(body))
-		// log.Error("Rest返回值解析失败: ", err)
+		log.Error("Rest返回值解析失败: ", err)
 		return nil, err
 	}
 	return res, nil

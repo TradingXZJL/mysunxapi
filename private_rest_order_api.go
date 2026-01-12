@@ -1,6 +1,6 @@
 package mysunxapi
 
-// POST 下单
+// POST PRIVATE_TRADE 下单
 func (client *PrivateRestClient) NewPrivateRestTradeOrderPost() *PrivateRestTradeOrderPostAPI {
 	return &PrivateRestTradeOrderPostAPI{
 		client: client,
@@ -9,15 +9,15 @@ func (client *PrivateRestClient) NewPrivateRestTradeOrderPost() *PrivateRestTrad
 }
 
 func (api *PrivateRestTradeOrderPostAPI) Do() (*SunxRestRes[PrivateRestTradeOrderResCommon], error) {
-	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeOrderPostReq](api.client.c, REST, POST, nil, PrivateRestAPIMap[PrivateRestTradeOrderPost])
+	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeOrderPostReq](api.client.c, PRIVATE_TRADE, POST, nil, PrivateRestAPIMap[PrivateRestTradeOrderPost])
 	reqBody, err := json.Marshal(api.req)
 	if err != nil {
 		return nil, err
 	}
-	return sunxCallApi[PrivateRestTradeOrderResCommon](url, reqBody, POST)
+	return sunxCallApi[PrivateRestTradeOrderResCommon](url, reqBody, POST, PRIVATE_TRADE)
 }
 
-// POST 批量下单
+// POST PRIVATE_TRADE 批量下单
 func (client *PrivateRestClient) NewPrivateRestTradeBatchOrders() *PrivateRestTradeBatchOrdersAPI {
 	return &PrivateRestTradeBatchOrdersAPI{
 		client: client,
@@ -26,15 +26,15 @@ func (client *PrivateRestClient) NewPrivateRestTradeBatchOrders() *PrivateRestTr
 }
 
 func (api *PrivateRestTradeBatchOrdersAPI) Do() (*SunxRestRes[PrivateRestTradeBatchOrdersRes], error) {
-	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeBatchOrdersReq](api.client.c, REST, POST, nil, PrivateRestAPIMap[PrivateRestTradeBatchOrders])
+	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeBatchOrdersReq](api.client.c, PRIVATE_TRADE, POST, nil, PrivateRestAPIMap[PrivateRestTradeBatchOrders])
 	reqBody, err := json.Marshal(api.req)
 	if err != nil {
 		return nil, err
 	}
-	return sunxCallApi[PrivateRestTradeBatchOrdersRes](url, reqBody, POST)
+	return sunxCallApi[PrivateRestTradeBatchOrdersRes](url, reqBody, POST, PRIVATE_TRADE)
 }
 
-// POST 撤单
+// POST PRIVATE_TRADE 撤单
 func (client *PrivateRestClient) NewPrivateRestTradeCancelOrder() *PrivateRestTradeCancelOrderAPI {
 	return &PrivateRestTradeCancelOrderAPI{
 		client: client,
@@ -43,15 +43,15 @@ func (client *PrivateRestClient) NewPrivateRestTradeCancelOrder() *PrivateRestTr
 }
 
 func (api *PrivateRestTradeCancelOrderAPI) Do() (*SunxRestRes[PrivateRestTradeCancelOrderRes], error) {
-	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeCancelOrderReq](api.client.c, REST, POST, nil, PrivateRestAPIMap[PrivateRestTradeCancelOrder])
+	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeCancelOrderReq](api.client.c, PRIVATE_TRADE, POST, nil, PrivateRestAPIMap[PrivateRestTradeCancelOrder])
 	reqBody, err := json.Marshal(api.req)
 	if err != nil {
 		return nil, err
 	}
-	return sunxCallApi[PrivateRestTradeCancelOrderRes](url, reqBody, POST)
+	return sunxCallApi[PrivateRestTradeCancelOrderRes](url, reqBody, POST, PRIVATE_TRADE)
 }
 
-// POST 批量撤单
+// POST PRIVATE_TRADE 批量撤单
 func (client *PrivateRestClient) NewPrivateRestTradeCancelBatchOrders() *PrivateRestTradeCancelBatchOrdersAPI {
 	return &PrivateRestTradeCancelBatchOrdersAPI{
 		client: client,
@@ -60,15 +60,15 @@ func (client *PrivateRestClient) NewPrivateRestTradeCancelBatchOrders() *Private
 }
 
 func (api *PrivateRestTradeCancelBatchOrdersAPI) Do() (*SunxRestRes[PrivateRestTradeCancelBatchOrdersRes], error) {
-	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeCancelBatchOrdersReq](api.client.c, REST, POST, nil, PrivateRestAPIMap[PrivateRestTradeCancelBatchOrders])
+	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeCancelBatchOrdersReq](api.client.c, PRIVATE_TRADE, POST, nil, PrivateRestAPIMap[PrivateRestTradeCancelBatchOrders])
 	reqBody, err := json.Marshal(api.req)
 	if err != nil {
 		return nil, err
 	}
-	return sunxCallApi[PrivateRestTradeCancelBatchOrdersRes](url, reqBody, POST)
+	return sunxCallApi[PrivateRestTradeCancelBatchOrdersRes](url, reqBody, POST, PRIVATE_TRADE)
 }
 
-// POST 全部撤单
+// POST PRIVATE_TRADE 全部撤单
 func (client *PrivateRestClient) NewPrivateRestTradeCancelAllOrders() *PrivateRestTradeCancelAllOrdersAPI {
 	return &PrivateRestTradeCancelAllOrdersAPI{
 		client: client,
@@ -77,15 +77,15 @@ func (client *PrivateRestClient) NewPrivateRestTradeCancelAllOrders() *PrivateRe
 }
 
 func (api *PrivateRestTradeCancelAllOrdersAPI) Do() (*SunxRestRes[PrivateRestTradeCancelAllOrdersRes], error) {
-	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeCancelAllOrdersReq](api.client.c, REST, POST, nil, PrivateRestAPIMap[PrivateRestTradeCancelAllOrders])
+	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradeCancelAllOrdersReq](api.client.c, PRIVATE_TRADE, POST, nil, PrivateRestAPIMap[PrivateRestTradeCancelAllOrders])
 	reqBody, err := json.Marshal(api.req)
 	if err != nil {
 		return nil, err
 	}
-	return sunxCallApi[PrivateRestTradeCancelAllOrdersRes](url, reqBody, POST)
+	return sunxCallApi[PrivateRestTradeCancelAllOrdersRes](url, reqBody, POST, PRIVATE_TRADE)
 }
 
-// POST 市价全平
+// POST PRIVATE_TRADE 市价全平
 func (client *PrivateRestClient) NewPrivateRestTradePosition() *PrivateRestTradePositionAPI {
 	return &PrivateRestTradePositionAPI{
 		client: client,
@@ -94,15 +94,15 @@ func (client *PrivateRestClient) NewPrivateRestTradePosition() *PrivateRestTrade
 }
 
 func (api *PrivateRestTradePositionAPI) Do() (*SunxRestRes[PrivateRestTradePositionRes], error) {
-	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradePositionReq](api.client.c, REST, POST, nil, PrivateRestAPIMap[PrivateRestTradePosition])
+	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradePositionReq](api.client.c, PRIVATE_TRADE, POST, nil, PrivateRestAPIMap[PrivateRestTradePosition])
 	reqBody, err := json.Marshal(api.req)
 	if err != nil {
 		return nil, err
 	}
-	return sunxCallApi[PrivateRestTradePositionRes](url, reqBody, POST)
+	return sunxCallApi[PrivateRestTradePositionRes](url, reqBody, POST, PRIVATE_TRADE)
 }
 
-// POST 一键全平
+// POST PRIVATE_TRADE 一键全平
 func (client *PrivateRestClient) NewPrivateRestTradePositionAll() *PrivateRestTradePositionAllAPI {
 	return &PrivateRestTradePositionAllAPI{
 		client: client,
@@ -111,15 +111,15 @@ func (client *PrivateRestClient) NewPrivateRestTradePositionAll() *PrivateRestTr
 }
 
 func (api *PrivateRestTradePositionAllAPI) Do() (*SunxRestRes[PrivateRestTradePositionAllRes], error) {
-	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradePositionAllReq](api.client.c, REST, POST, nil, PrivateRestAPIMap[PrivateRestTradePositionAll])
+	url := sunxHandlerRequestAPIWithSignature[PrivateRestTradePositionAllReq](api.client.c, PRIVATE_TRADE, POST, nil, PrivateRestAPIMap[PrivateRestTradePositionAll])
 	reqBody, err := json.Marshal(api.req)
 	if err != nil {
 		return nil, err
 	}
-	return sunxCallApi[PrivateRestTradePositionAllRes](url, reqBody, POST)
+	return sunxCallApi[PrivateRestTradePositionAllRes](url, reqBody, POST, PRIVATE_TRADE)
 }
 
-// GET 查询当前委托
+// GET PRIVATE_READ 查询当前委托
 func (client *PrivateRestClient) NewPrivateRestTradeOrderOpens() *PrivateRestTradeOrderOpensAPI {
 	return &PrivateRestTradeOrderOpensAPI{
 		client: client,
@@ -128,11 +128,11 @@ func (client *PrivateRestClient) NewPrivateRestTradeOrderOpens() *PrivateRestTra
 }
 
 func (api *PrivateRestTradeOrderOpensAPI) Do() (*SunxRestRes[PrivateRestTradeOrderOpensRes], error) {
-	url := sunxHandlerRequestAPIWithSignature(api.client.c, REST, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderOpens])
-	return sunxCallApi[PrivateRestTradeOrderOpensRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithSignature(api.client.c, PRIVATE_READ, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderOpens])
+	return sunxCallApi[PrivateRestTradeOrderOpensRes](url, NIL_REQBODY, GET, PRIVATE_READ)
 }
 
-// GET 查询成交明细
+// GET PRIVATE_READ 查询成交明细
 func (client *PrivateRestClient) NewPrivateRestTradeOrderDetails() *PrivateRestTradeOrderDetailsAPI {
 	return &PrivateRestTradeOrderDetailsAPI{
 		client: client,
@@ -141,11 +141,11 @@ func (client *PrivateRestClient) NewPrivateRestTradeOrderDetails() *PrivateRestT
 }
 
 func (api *PrivateRestTradeOrderDetailsAPI) Do() (*SunxRestRes[PrivateRestTradeOrderDetailsRes], error) {
-	url := sunxHandlerRequestAPIWithSignature(api.client.c, REST, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderDetails])
-	return sunxCallApi[PrivateRestTradeOrderDetailsRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithSignature(api.client.c, PRIVATE_READ, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderDetails])
+	return sunxCallApi[PrivateRestTradeOrderDetailsRes](url, NIL_REQBODY, GET, PRIVATE_READ)
 }
 
-// GET 查询历史委托
+// GET PRIVATE_READ 查询历史委托
 func (client *PrivateRestClient) NewPrivateRestTradeOrderHistory() *PrivateRestTradeOrderHistoryAPI {
 	return &PrivateRestTradeOrderHistoryAPI{
 		client: client,
@@ -154,11 +154,11 @@ func (client *PrivateRestClient) NewPrivateRestTradeOrderHistory() *PrivateRestT
 }
 
 func (api *PrivateRestTradeOrderHistoryAPI) Do() (*SunxRestRes[PrivateRestTradeOrderHistoryRes], error) {
-	url := sunxHandlerRequestAPIWithSignature(api.client.c, REST, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderHistory])
-	return sunxCallApi[PrivateRestTradeOrderHistoryRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithSignature(api.client.c, PRIVATE_READ, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderHistory])
+	return sunxCallApi[PrivateRestTradeOrderHistoryRes](url, NIL_REQBODY, GET, PRIVATE_READ)
 }
 
-// GET 查询订单信息
+// GET PRIVATE_READ 查询订单信息
 func (client *PrivateRestClient) NewPrivateRestTradeOrderGet() *PrivateRestTradeOrderGetAPI {
 	return &PrivateRestTradeOrderGetAPI{
 		client: client,
@@ -167,11 +167,11 @@ func (client *PrivateRestClient) NewPrivateRestTradeOrderGet() *PrivateRestTrade
 }
 
 func (api *PrivateRestTradeOrderGetAPI) Do() (*SunxRestRes[PrivateRestTradeOrderGetRes], error) {
-	url := sunxHandlerRequestAPIWithSignature(api.client.c, REST, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderGet])
-	return sunxCallApi[PrivateRestTradeOrderGetRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithSignature(api.client.c, PRIVATE_READ, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderGet])
+	return sunxCallApi[PrivateRestTradeOrderGetRes](url, NIL_REQBODY, GET, PRIVATE_READ)
 }
 
-// GET 查询用户当前的下单量限制
+// GET PRIVATE_READ 查询用户当前的下单量限制
 func (client *PrivateRestClient) NewPrivateRestTradeOrderLimit() *PrivateRestTradeOrderLimitAPI {
 	return &PrivateRestTradeOrderLimitAPI{
 		client: client,
@@ -180,6 +180,6 @@ func (client *PrivateRestClient) NewPrivateRestTradeOrderLimit() *PrivateRestTra
 }
 
 func (api *PrivateRestTradeOrderLimitAPI) Do() (*SunxRestRes[PrivateRestTradeOrderLimitRes], error) {
-	url := sunxHandlerRequestAPIWithSignature(api.client.c, REST, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderLimit])
-	return sunxCallApi[PrivateRestTradeOrderLimitRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithSignature(api.client.c, PRIVATE_READ, GET, api.req, PrivateRestAPIMap[PrivateRestTradeOrderLimit])
+	return sunxCallApi[PrivateRestTradeOrderLimitRes](url, NIL_REQBODY, GET, PRIVATE_READ)
 }
