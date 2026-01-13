@@ -175,12 +175,8 @@ func RequestWithHeader(urlStr string, reqBody []byte, method string, headerMap m
 		if err != nil {
 			return nil, err
 		}
-		if currentProxy == nil {
+		if currentProxy == nil || currentProxyWeight == nil || currentProxyWeight.RemainWeight <= 0 {
 			return nil, errors.New("all proxy ip weight limit reached")
-		}
-		if currentProxyWeight.RemainWeight <= 0 {
-			currentProxyWeight.Is1032Limited = true
-			return nil, errors.New("current proxy ip weight limit reached")
 		}
 
 		url_i := url.URL{}
