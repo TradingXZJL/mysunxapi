@@ -128,7 +128,7 @@ func getBestProxyAndWeight(apiType APIType) (*RestProxy, *ProxyWeight, error) {
 			maxWeight = proxyWeight
 		}
 	}
-	log.Warnf("maxHeightProxy: %v", maxWeightProxy)
+	log.Debug("maxHeightProxy: %v", maxWeightProxy)
 	return maxWeightProxy, maxWeight, nil
 }
 
@@ -225,11 +225,14 @@ func RequestWithHeader(urlStr string, reqBody []byte, method string, headerMap m
 					currentProxyWeight.RemainWeight = remainWeight
 				}
 
-				//回填是否接口权重已用完
-				if currentProxyWeight.RemainWeight <= 0 {
-					currentProxyWeight.Is1032Limited = true
-				}
 			}
+		} else {
+			// 如果ratelimit-remaining为空，则本地维护剩余权重
+			currentProxyWeight.RemainWeight -= 1
+		}
+		//回填是否接口权重已用完
+		if currentProxyWeight.RemainWeight <= 0 {
+			currentProxyWeight.Is1032Limited = true
 		}
 
 		// 回填是否1032限制
