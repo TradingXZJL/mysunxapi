@@ -1,6 +1,6 @@
 package mysunxapi
 
-// GET 获取行情深度数据
+// GET PUBLIC_READ 获取行情深度数据
 func (client *PublicRestClient) NewPublicRestMarketDepth() *PublicRestMarketDepthAPI {
 	return &PublicRestMarketDepthAPI{
 		client: client,
@@ -9,8 +9,8 @@ func (client *PublicRestClient) NewPublicRestMarketDepth() *PublicRestMarketDept
 }
 
 func (api *PublicRestMarketDepthAPI) Do() (*SunxRestRes[PublicRestMarketDepthRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestMarketDepth])
-	middleRes, err := sunxCallApi[PublicRestMarketDepthResMiddle](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestMarketDepth])
+	middleRes, err := sunxCallApi[PublicRestMarketDepthResMiddle](url, NIL_REQBODY, GET, PUBLIC)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +23,7 @@ func (api *PublicRestMarketDepthAPI) Do() (*SunxRestRes[PublicRestMarketDepthRes
 	return res, nil
 }
 
-// GET 获取K线数据
+// GET PUBLIC_READ 获取K线数据
 func (client *PublicRestClient) NewPublicRestMarketHistoryKline() *PublicRestMarketHistoryKlineAPI {
 	return &PublicRestMarketHistoryKlineAPI{
 		client: client,
@@ -32,11 +32,11 @@ func (client *PublicRestClient) NewPublicRestMarketHistoryKline() *PublicRestMar
 }
 
 func (api *PublicRestMarketHistoryKlineAPI) Do() (*SunxRestRes[PublicRestMarketHistoryKlineRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestMarketHistoryKline])
-	return sunxCallApi[PublicRestMarketHistoryKlineRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestMarketHistoryKline])
+	return sunxCallApi[PublicRestMarketHistoryKlineRes](url, NIL_REQBODY, GET, PUBLIC)
 }
 
-// GET 获取聚合行情
+// GET PUBLIC_READ 获取聚合行情
 func (client *PublicRestClient) NewPublicRestMarketDetailMerged() *PublicRestMarketDetailMergedAPI {
 	return &PublicRestMarketDetailMergedAPI{
 		client: client,
@@ -45,8 +45,8 @@ func (client *PublicRestClient) NewPublicRestMarketDetailMerged() *PublicRestMar
 }
 
 func (api *PublicRestMarketDetailMergedAPI) Do() (*SunxRestRes[PublicRestMarketDetailMergedRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestMarketDetailMerged])
-	middleRes, err := sunxCallApi[PublicRestMarketDetailMergedResMiddle](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestMarketDetailMerged])
+	middleRes, err := sunxCallApi[PublicRestMarketDetailMergedResMiddle](url, NIL_REQBODY, GET, PUBLIC)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (api *PublicRestMarketDetailMergedAPI) Do() (*SunxRestRes[PublicRestMarketD
 	return res, nil
 }
 
-// GET 获取最新成交
+// GET PUBLIC_READ 获取最新成交
 func (client *PublicRestClient) NewPublicRestMarketTrade() *PublicRestMarketTradeAPI {
 	return &PublicRestMarketTradeAPI{
 		client: client,
@@ -68,11 +68,11 @@ func (client *PublicRestClient) NewPublicRestMarketTrade() *PublicRestMarketTrad
 }
 
 func (api *PublicRestMarketTradeAPI) Do() (*SunxRestRes[PublicRestMarketTradeRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestMarketTrade])
-	return sunxCallApi[PublicRestMarketTradeRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestMarketTrade])
+	return sunxCallApi[PublicRestMarketTradeRes](url, NIL_REQBODY, GET, PUBLIC)
 }
 
-// GET 获取市场最优挂单
+// GET PUBLIC_READ 获取市场最优挂单
 func (client *PublicRestClient) NewPublicRestMarketBBO() *PublicRestMarketBBOAPI {
 	return &PublicRestMarketBBOAPI{
 		client: client,
@@ -81,8 +81,8 @@ func (client *PublicRestClient) NewPublicRestMarketBBO() *PublicRestMarketBBOAPI
 }
 
 func (api *PublicRestMarketBBOAPI) Do() (*SunxRestRes[PublicRestMarketBBORes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestMarketBBO])
-	middleRes, err := sunxCallApi[PublicRestMarketBBOResMiddle](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestMarketBBO])
+	middleRes, err := sunxCallApi[PublicRestMarketBBOResMiddle](url, NIL_REQBODY, GET, PUBLIC)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (api *PublicRestMarketBBOAPI) Do() (*SunxRestRes[PublicRestMarketBBORes], e
 	return res, nil
 }
 
-// GET 批量获取最近的交易记录
+// GET PUBLIC_READ 批量获取最近的交易记录
 func (client *PublicRestClient) NewPublicRestMarketHistoryTrade() *PublicRestMarketHistoryTradeAPI {
 	return &PublicRestMarketHistoryTradeAPI{
 		client: client,
@@ -104,6 +104,6 @@ func (client *PublicRestClient) NewPublicRestMarketHistoryTrade() *PublicRestMar
 }
 
 func (api *PublicRestMarketHistoryTradeAPI) Do() (*SunxRestRes[PublicRestMarketHistoryTradeRes], error) {
-	url := sunxHandlerRequestAPIWithoutSignature(REST, api.req, PublicRestAPIMap[PublicRestMarketHistoryTrade])
-	return sunxCallApi[PublicRestMarketHistoryTradeRes](url, NIL_REQBODY, GET)
+	url := sunxHandlerRequestAPIWithoutSignature(PUBLIC, api.req, PublicRestAPIMap[PublicRestMarketHistoryTrade])
+	return sunxCallApi[PublicRestMarketHistoryTradeRes](url, NIL_REQBODY, GET, PUBLIC)
 }
