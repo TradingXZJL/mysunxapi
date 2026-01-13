@@ -276,6 +276,7 @@ func (ws *WsStreamClient) sendUnSubscribeSuccessToCloseChan(reqId string, subKey
 }
 
 func (ws *WsStreamClient) reSubscribeForReconnect() error {
+	log.Warn("reSubscribeForReconnect")
 	var errG errgroup.Group
 	ws.currentSubMap.Range(func(_ string, sub *Subscription[WsSubscribeReqCommon, WsSubscribeResCommon]) bool {
 		// 如果没有保存请求参数，跳过
@@ -291,13 +292,35 @@ func (ws *WsStreamClient) reSubscribeForReconnect() error {
 			if reqId == "" {
 				reqId = node.Generate().String()
 			}
+			// 使用 sub.SubReqs 进行重新订阅
 			newSub, err := subscribe[WsSubscribeReqCommon, WsSubscribeResCommon](ws, sub.SubReqs, reqId)
 			if err != nil {
 				log.Error(err)
 				return err
 			}
 
-			sub.SubId = newSub.SubId
+			ws.currentSubMap.Store(newSub.SubId, newSub)
+
+			for _, req := range sub.SubReqs {
+				if req.Id == "" {
+					req.Id = node.Generate().String()
+				}
+
+				data, err := json.Marshal(req)
+				if err != nil {
+					log.Error(err)
+					return err
+				}
+				// log.Debugf("re-subscribe req: %s", string(data))
+
+				ws.writeMu.Lock()
+				err = ws.conn.WriteMessage(websocket.TextMessage, data)
+				ws.writeMu.Unlock()
+				if err != nil {
+					log.Error(err)
+					return err
+				}
+			}
 			return nil
 		})
 		return true
@@ -475,7 +498,7 @@ type WsSubscribeReqCommon struct {
 	Op           string `json:"op,omitempty"`
 	Cid          string `json:"cid,omitempty"`
 	Topic        string `json:"topic,omitempty"`
-	ContractCode string `json:"contractCode,omitempty"`
+	ContractCode string `json:"contract_code,omitempty"`
 }
 
 // 通用订阅返回结果结构
@@ -639,9 +662,12 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					strings.Contains(err.Error(), "close") ||
 					strings.Contains(err.Error(), "reset")) {
 					//重连
+					log.Error("意外断连,5秒后自动重连: ", err.Error())
+					time.Sleep(5 * time.Second)
 					err := ws.OpenConn()
 					for err != nil {
-						time.Sleep(1500 * time.Millisecond)
+						log.Error("意外断连,5秒后自动重连: ", err.Error())
+						time.Sleep(5 * time.Second)
 						err = ws.OpenConn()
 					}
 					ws.AutoReConnectTimes += 1
@@ -660,7 +686,6 @@ func (ws *WsStreamClient) handleResult(resultChan chan []byte, errChan chan erro
 					log.Error("resultChan is closed")
 					return
 				}
-
 
 				// log.Warn("data: ", string(data))
 				// Auth Success
