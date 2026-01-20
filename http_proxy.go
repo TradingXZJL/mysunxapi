@@ -128,7 +128,7 @@ func getBestProxyAndWeight(apiType APIType) (*RestProxy, *ProxyWeight, error) {
 			maxWeight = proxyWeight
 		}
 	}
-	log.Debug("maxHeightProxy: %v", maxWeightProxy)
+	// log.Debug("maxHeightProxy: %v", maxWeightProxy)
 	return maxWeightProxy, maxWeight, nil
 }
 
