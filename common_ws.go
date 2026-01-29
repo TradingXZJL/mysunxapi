@@ -986,7 +986,7 @@ func handlerWsStreamRequestApi(ws *WsStreamClient) (string, bool) {
 	return u.String(), isPrivate
 }
 
-// sendAuthMessage 发送鉴权消息(内部方法)
+// sendAuthMessage 发送鉴权消息
 func (ws *WsStreamClient) sendAuthMessage() error {
 	if ws == nil || ws.conn == nil || ws.isClose {
 		return fmt.Errorf("websocket is close")
